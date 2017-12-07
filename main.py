@@ -1,40 +1,29 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from cg_graphics_audio import *
-from cei2 import *
-from DetailsForm import *
-from consent_form import ConsentForm
-from learning_form import *
-from final_form import FinalForm
+from questionnaire_form import *
+from final_form import *
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
-from curiosity_score import *
+from kivy_communication.kivy_logger import *
 from kivy_communication import KL
 
 
 class CuriosityApp(App):
     sm = None
-    cg = None
-    cf = None
     qf = None
-    lf = None
-    df = None
-    ff = None
-    score = None
     float_layout = None
 
     cei2 = None
-    learn = None
+    bfi = None
 
     def build(self):
         # initialize logger
         #KL.start([DataMode.file, DataMode.communication]) #, "/sdcard/curiosity/", the_ip='127.0.0.1')#self.user_data_dir)
         KL.start([DataMode.file, DataMode.communication, DataMode.ros], self.user_data_dir)
 
-        self.cei2 = CEI2()
         self.qf = []
-        for p in range(0, len(self.cei2.page_dict)):
-            self.qf.append(QuestionsForm(self, self.cei2.page_dict[p]))
+        self.add_questionnaire('questions_cei2.json')
+        # self.add_questionnaire('questions_openness.json')
 
         self.sm = ScreenManager()
 
@@ -43,14 +32,22 @@ class CuriosityApp(App):
             screen.add_widget(self.qf[kqf])
             self.sm.add_widget(screen)
 
+        screen = Screen(name='final_form')
+        screen.add_widget(FinalForm(self))
+        self.sm.add_widget(screen)
+
         self.start()
         return self.sm
+
+    def add_questionnaire(self, filename=""):
+        new_questionnaire = Questionnaire(filename)
+        for p in range(0, len(new_questionnaire.page_dict)):
+            self.qf.append(QuestionsForm(self, new_questionnaire.page_dict[p]))
 
     def start(self):
         KL.start([DataMode.file, DataMode.communication, DataMode.ros], self.user_data_dir)
         for qf in self.qf:
             qf.start()
-        # self.sm.current = "question"
 
     def on_pause(self):
         return True

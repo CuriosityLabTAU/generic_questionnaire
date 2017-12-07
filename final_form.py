@@ -20,27 +20,9 @@ class FinalForm(BoxLayout):
         super(FinalForm, self).__init__()
         self.the_app = the_app
 
-        self.statements = {}
-        store = JsonStore('final_statements.json').get('final_statements')
-        for key, value in store.items():
-            self.statements[key] = {}
-            for k,v in value.items():
-                self.statements[key][k] = v
-
-        title_txt = u"כל הכבוד!"
+        title_txt = u"תודה רבה!"
         self.title.text = title_txt[::-1]
 
-        statement_layout = BoxLayout(orientation="vertical")
-        self.statement_label = []
-        statement_layout.add_widget(BoxLayout(size_hint_y=0.3))
-
-        for k in range(0,4):
-            self.statement_label.append(Label(font_size=40,
-                                              font_name="fonts/the_font.ttf",
-                                              halign='center', size_hint_y=0.4,
-                                              color=[0,0,0, 1]))
-            statement_layout.add_widget(self.statement_label[-1])
-        self.add_widget(statement_layout)
         end_text = u"סיום"
         self.end_button.text = end_text[::-1]
         self.end_button.bind(on_press=self.next)
@@ -69,4 +51,4 @@ class FinalForm(BoxLayout):
         self.rect.size = instance.size
 
     def next(self, pars):
-        self.the_app.start()
+        self.the_app.stop()
