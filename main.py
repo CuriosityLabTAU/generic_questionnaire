@@ -22,7 +22,7 @@ class CuriosityApp(App):
         KL.start([DataMode.file, DataMode.communication, DataMode.ros], self.user_data_dir)
 
         self.qf = []
-        self.add_questionnaire('questions_cei2.json')
+        self.add_questionnaire('questionnaires/STAIT.json')
         # self.add_questionnaire('questions_openness.json')
 
         self.sm = ScreenManager()

@@ -80,22 +80,19 @@ class QuestionsForm(BoxLayout):
                   halign='right', size_hint_y=0.4,size_hint_x=1.5,
                   color=[0,0,0,1]))
         layoutup.add_widget(BoxLayout(size_hint_y=0.1))
-        layoutup.add_widget(
-            Label(text=dict['qu_description']['d1'],
-                  font_name="fonts/the_font.ttf", font_size=36, halign='right',
-                  size_hint_y=0.15,
-                  color=[0,0,0,1]))
-        layoutup.add_widget(
-            Label(text=dict['qu_description']['d2'],
-                  font_name="fonts/the_font.ttf", font_size=36, halign='right',
-                  size_hint_y=0.15,
-                  color=[0,0,0,1]))
-        layoutup.add_widget(
-            Label(text=dict['qu_description']['d3'],
-                  font_name="fonts/the_font.ttf", font_size=36, halign='right',
-                  size_hint_y=0.15,
-                  color=[0,0,0,1]))
-        layoutup.add_widget(BoxLayout(size_hint_y=0.2))
+        q_lines = 0
+        for i in range(1,5):
+            try:
+                layoutup.add_widget(
+                    Label(text=dict['qu_description']['d%d' % i],
+                          font_name="fonts/the_font.ttf", font_size=36, halign='right',
+                          size_hint_y=0.15,
+                          color=[0,0,0,1]))
+                q_lines += 1
+            except:
+                break
+        if q_lines < 4:
+            layoutup.add_widget(BoxLayout(size_hint_y=0.2))
 
         # question matrix
         layout = GridLayout(cols=len(dict['ans']) + 2,
