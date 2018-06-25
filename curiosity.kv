@@ -151,3 +151,57 @@
                 size_hint_y:0.2
         BoxLayout:
             size_hint_y:0.2
+
+<MiddleForm>:
+    title:title
+    curiosity_lbl:curiosity_lbl
+    next_button:next_button
+    canvas:
+        Rectangle:
+            source: 'back3.png'
+            size: self.size
+
+	BoxLayout:
+	    orientation: "vertical"
+	    BoxLayout:
+	    BoxLayout:
+        BoxLayout:
+            size_hint_y: 7
+	    BoxLayout:
+	        BoxLayout:
+	            size_hint_x:2
+            Label:
+                id:title
+                font_size: 60
+                font_name: "fonts/the_font.ttf"
+                color: [0,0,0,1]
+        BoxLayout:
+            orientation: "horizontal"
+            BoxLayout:
+            BoxLayout:
+            BoxLayout:
+            Label:
+            Label:
+                #size_hint_x: 10
+                id:curiosity_lbl
+                font_size: 40
+                font_name: "fonts/the_font.ttf"
+                color: [0,0,0,1]
+                align: "center"
+        BoxLayout:
+            size_hint_y:1
+        BoxLayout:
+            size_hint_y:0.5
+            BoxLayout:
+                size_hint_y:0.2
+            LoggedButton:
+                name:'next_button'
+                id:next_button
+                background_color:[0,0.71,1,1]
+                background_normal:""
+                font_size:30
+                font_name:"fonts/the_font.ttf"
+            BoxLayout:
+                size_hint_y:0.2
+        BoxLayout:
+            size_hint_y:0.2

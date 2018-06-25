@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from questionnaire_form import *
 from final_form import *
+from middle_form import *
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy_communication.kivy_logger import *
@@ -22,8 +23,13 @@ class CuriosityApp(App):
         KL.start([DataMode.file, DataMode.communication, DataMode.ros], self.user_data_dir)
 
         self.qf = []
-        self.add_questionnaire('questionnaires/STAIT.json')
-        # self.add_questionnaire('questions_openness.json')
+        self.add_questionnaire('questionnaires/BFI.json')
+        self.qf.append(MiddleForm(self))
+        self.add_questionnaire('questionnaires/Need for Cognition.json')
+        self.qf.append(MiddleForm(self))
+        self.add_questionnaire('questionnaires/Questionnaire3.json')
+        self.qf.append(MiddleForm(self))
+        self.add_questionnaire('questionnaires/Questionnaire4.json')
 
         self.sm = ScreenManager()
 
@@ -42,7 +48,8 @@ class CuriosityApp(App):
     def add_questionnaire(self, filename=""):
         new_questionnaire = Questionnaire(filename)
         for p in range(0, len(new_questionnaire.page_dict)):
-            self.qf.append(QuestionsForm(self, new_questionnaire.page_dict[p]))
+            self.qf.append(QuestionsForm(self, new_questionnaire.page_dict[p],
+                                         new_questionnaire.questionnaire_name))
 
     def start(self):
         KL.start([DataMode.file, DataMode.communication, DataMode.ros], self.user_data_dir)

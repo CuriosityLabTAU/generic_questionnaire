@@ -13,11 +13,13 @@ from kivy.storage.jsonstore import JsonStore
 class Questionnaire():
     dict = None
     page_dict = None
+    questionnaire_name = ""
 
     def __init__(self, question_filename='question.json'):
         self.dict = {'q_in_page': [], 'qu_title': "", 'qu_description': "", 'ques': {},
                 'ans': {}, 'next_button': "", 'prev_button': ""}
         store = JsonStore(question_filename, encoding='utf-8').get('questionnaire')
+        self.questionnaire_name = store['qu_name']
 
         for key, value in store.items():
             if key in ['qu_title', 'next_button', 'prev_button', 'questions']:
@@ -52,6 +54,7 @@ class Questionnaire():
                 if k != 'ques':
                     pd[k] = v
 
+
 class QuestionsForm(BoxLayout):
     answers = {}
     ans_button = []
@@ -60,9 +63,10 @@ class QuestionsForm(BoxLayout):
     next_button = None
     num_pages = 1
 
-    def __init__(self, app, dict):
+    def __init__(self, app, dict, name):
         super(QuestionsForm, self).__init__()
         self.the_app = app
+        self.questionnaire_name = name
         with self.canvas.before:
             self.rect = Rectangle(source='back4.png')
             self.bind(size=self._update_rect, pos=self._update_rect)
@@ -125,7 +129,7 @@ class QuestionsForm(BoxLayout):
             for ans in dict['ans']:
                 ab = AnswerButton(size_hint_x=0.15,
                                   text="", group=str(q_counter))
-                ab.name = str(ques) + "," + str(ans)
+                ab.name = str(self.questionnaire_name) + ',' + str(ques) + "," + str(ans)
                 ab.question = ques
                 ab.answer = ans
                 ab.form = self
