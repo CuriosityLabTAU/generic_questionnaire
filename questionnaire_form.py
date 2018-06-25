@@ -8,6 +8,11 @@ from kivy.uix.label import Label
 import collections
 from kivy_communication.logged_widgets import *
 from kivy.storage.jsonstore import JsonStore
+from kivy.uix.widget import Widget
+
+
+class Separator(Widget):
+    pass
 
 
 class Questionnaire():
@@ -100,8 +105,8 @@ class QuestionsForm(BoxLayout):
 
         # question matrix
         layout = GridLayout(cols=len(dict['ans']) + 2,
-                            rows=len(dict['ques']) + 1,
-                            row_default_height=400 / num_questions)
+                            rows=len(dict['ques'])*2 + 2,
+                            row_default_height=200 / num_questions)
 
         dict['ques'] = collections.OrderedDict(sorted(dict['ques'].items()))
 
@@ -126,6 +131,10 @@ class QuestionsForm(BoxLayout):
                           color=[0,0,0,1]))
                 layout.add_widget(BoxLayout(size_hint_x=0.1))
 
+                layout.add_widget(BoxLayout(size_hint_x=0.05))
+                for i in range(len(dict['ans']) + 1):
+                    layout.add_widget(BoxLayout(size_hint_x=0.15))
+
             for ans in dict['ans']:
                 ab = AnswerButton(size_hint_x=0.15,
                                   text="", group=str(q_counter))
@@ -133,6 +142,11 @@ class QuestionsForm(BoxLayout):
                 ab.question = ques
                 ab.answer = ans
                 ab.form = self
+                if '*' in ques:
+                    ab.disabled = True
+                    ab.opacity = 0.0
+                    self.answers[ab.question] = 'ans0'
+
                 self.ans_button.append(ab)
                 layout.add_widget(ab)
 
@@ -142,6 +156,14 @@ class QuestionsForm(BoxLayout):
                       font_name="fonts/the_font.ttf", orientation='vertical',
                       font_size=36,
                       color=[0,0,0,1]))
+
+            layout.add_widget(BoxLayout(size_hint_x=0.05))
+            for i in range(len(dict['ans']) + 1):
+                if '*' in ques:
+                    layout.add_widget(BoxLayout(size_hint_x=0.15))
+                else:
+                    layout.add_widget(Separator(size_hint_x=0.15))
+
 
         layoutup.add_widget(layout)
         layoutup.add_widget(BoxLayout())

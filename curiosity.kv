@@ -205,3 +205,16 @@
                 size_hint_y:0.2
         BoxLayout:
             size_hint_y:0.2
+
+<Separator@Widget>
+    size_hint_y: None
+    thickness: 2
+    margin: 2
+    height: self.thickness + 2 * self.margin
+    color: 1., .0, .0
+    canvas:
+        Color:
+            rgb: self.color
+        Rectangle:
+            pos: self.x + self.margin, self.y + self.margin + 1
+            size: self.width - 2 * self.margin , self.thickness
