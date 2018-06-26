@@ -31,6 +31,18 @@ class QuestionnairesApp(App):
         #KL.start([DataMode.file, DataMode.communication]) #, "/sdcard/curiosity/", the_ip='127.0.0.1')#self.user_data_dir)
         KL.start([DataMode.file, DataMode.communication, DataMode.ros], self.user_data_dir)
 
+
+
+        self.sm = ScreenManager()
+
+        screen = ZeroScreen()
+        screen.start()
+        screen.ids['subject_id'].bind(text=screen.ids['subject_id'].on_text_change)
+        self.sm.add_widget(screen)
+
+        return self.sm
+
+    def add_all(self):
         self.qf = []
         self.add_questionnaire('questionnaires/BFI.json')
         self.qf.append(MiddleForm(self))
@@ -39,13 +51,6 @@ class QuestionnairesApp(App):
         self.add_questionnaire('questionnaires/Questionnaire3.json')
         self.qf.append(MiddleForm(self))
         self.add_questionnaire('questionnaires/Questionnaire4.json')
-
-        self.sm = ScreenManager()
-
-        screen = ZeroScreen()
-        screen.start()
-        screen.ids['subject_id'].bind(text=screen.ids['subject_id'].on_text_change)
-        self.sm.add_widget(screen)
 
         for kqf in range(0, len(self.qf)):
             screen = Screen(name="question"+str(kqf))
@@ -57,7 +62,6 @@ class QuestionnairesApp(App):
         self.sm.add_widget(screen)
 
         self.start()
-        return self.sm
 
     def add_questionnaire(self, filename=""):
         new_questionnaire = Questionnaire(filename)
@@ -74,6 +78,8 @@ class QuestionnairesApp(App):
         return True
 
     def press_start(self, pre_post):
+        print(self.sm.size)
+        self.add_all()
         self.sm.current = self.sm.next()
 
 

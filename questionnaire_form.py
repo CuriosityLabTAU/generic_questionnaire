@@ -76,6 +76,17 @@ class QuestionsForm(BoxLayout):
             self.rect = Rectangle(source='back4.png')
             self.bind(size=self._update_rect, pos=self._update_rect)
 
+        if self.the_app.sm.size[1] < 1000:
+            self.screen_type = 0
+        else:
+            self.screen_type = 1
+
+        self.font_sizes = {
+            'title': [40, 50],
+            'description': [24, 36],
+            'answers': [16, 25],
+            'questions': [24, 36],
+        }
 
         self.answers = {}
         self.questions = dict['ques']
@@ -85,7 +96,7 @@ class QuestionsForm(BoxLayout):
         layoutup.add_widget(BoxLayout(size_hint_y=0.7))
         layoutup.add_widget(
             Label(text=dict['qu_title'],
-                  font_size=50, font_name="fonts/the_font.ttf",
+                  font_size=self.font_sizes['title'][self.screen_type], font_name="fonts/the_font.ttf",
                   halign='right', size_hint_y=0.4,size_hint_x=1.5,
                   color=[0,0,0,1]))
         layoutup.add_widget(BoxLayout(size_hint_y=0.1))
@@ -94,7 +105,8 @@ class QuestionsForm(BoxLayout):
             try:
                 layoutup.add_widget(
                     Label(text=dict['qu_description']['d%d' % i],
-                          font_name="fonts/the_font.ttf", font_size=36, halign='right',
+                          font_name="fonts/the_font.ttf",
+                          font_size=self.font_sizes['description'][self.screen_type], halign='right',
                           size_hint_y=0.15,
                           color=[0,0,0,1]))
                 q_lines += 1
@@ -106,7 +118,7 @@ class QuestionsForm(BoxLayout):
         # question matrix
         layout = GridLayout(cols=len(dict['ans']) + 2,
                             rows=len(dict['ques'])*2 + 2,
-                            row_default_height=200 / num_questions)
+                            row_default_height=(150 + self.screen_type*50) / num_questions)
 
         dict['ques'] = collections.OrderedDict(sorted(dict['ques'].items()))
 
@@ -120,7 +132,7 @@ class QuestionsForm(BoxLayout):
                         Label(size_hint_x=0.1,
                               text=dict['ans'][ans],
                               font_name="fonts/the_font.ttf",
-                              font_size=25,
+                              font_size=self.font_sizes['answers'][self.screen_type],
                               halign='right',
                               color=[0,0,0,1]))
                 layout.add_widget(
@@ -154,7 +166,7 @@ class QuestionsForm(BoxLayout):
             layout.add_widget(
                 Label(halign='right', text=dict['ques'][ques],
                       font_name="fonts/the_font.ttf", orientation='vertical',
-                      font_size=36,
+                      font_size=self.font_sizes['questions'][self.screen_type],
                       color=[0,0,0,1]))
 
             layout.add_widget(BoxLayout(size_hint_x=0.05))
