@@ -9,7 +9,7 @@ from kivy_communication.kivy_logger import *
 from kivy_communication import KL
 
 
-class CuriosityApp(App):
+class QuestionnairesApp(App):
     sm = None
     qf = None
     float_layout = None
@@ -60,5 +60,5 @@ class CuriosityApp(App):
         return True
 
 if __name__ == '__main__':
-    CuriosityApp().run()
+    QuestionnairesApp().run()
 
