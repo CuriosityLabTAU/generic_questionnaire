@@ -9,6 +9,15 @@ from kivy_communication.kivy_logger import *
 from kivy_communication import KL
 
 
+class ZeroScreen(Screen):
+
+    def on_enter(self, *args):
+        KL.restart()
+
+    def start(self):
+        self.ids['subject_id'].bind(text=self.ids['subject_id'].on_text_change)
+
+
 class QuestionnairesApp(App):
     sm = None
     qf = None
@@ -32,6 +41,11 @@ class QuestionnairesApp(App):
         self.add_questionnaire('questionnaires/Questionnaire4.json')
 
         self.sm = ScreenManager()
+
+        screen = ZeroScreen()
+        screen.start()
+        screen.ids['subject_id'].bind(text=screen.ids['subject_id'].on_text_change)
+        self.sm.add_widget(screen)
 
         for kqf in range(0, len(self.qf)):
             screen = Screen(name="question"+str(kqf))
@@ -58,6 +72,10 @@ class QuestionnairesApp(App):
 
     def on_pause(self):
         return True
+
+    def press_start(self, pre_post):
+        self.sm.current = self.sm.next()
+
 
 if __name__ == '__main__':
     QuestionnairesApp().run()

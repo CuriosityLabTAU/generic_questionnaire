@@ -68,6 +68,10 @@ class KL:
             Logger.info("KL mode:" + str(mode))
         KL.log.set_mode(mode)
 
+    @staticmethod
+    def restart():
+        KL.log.set_mode(KL.log.base_mode)
+
     def __init__(self):
         pass
 
@@ -129,7 +133,7 @@ class KivyLogger:
         KivyLogger.t0 = datetime.now()
 
     @staticmethod
-    def insert(action=LogAction.none, obj='', comment='', t=None, mode=None):
+    def insert(action=LogAction.none, obj='', comment='', t=None, mode=None, sync=True):
         if t is None:
             t = datetime.now()
         data = {'time':t, 'action':action, 'obj':obj, 'comment':comment}
@@ -146,21 +150,27 @@ class KivyLogger:
             KivyLogger.send_data(data_str)
 
         if DataMode.file in mode:
-            KivyLogger.save(data_str)
+            KivyLogger.save(data_str, sync)
 
     # file
     @staticmethod
-    def save(data_str):
+    def save(data_str, sync):
         #print(data_str)
         try:
             if DataMode.encrypted in KivyLogger.base_mode:
                 KivyLogger.store.put(datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f'),
                                      data=str(data_str).encode('ascii'))
+            # else:
+            #     KivyLogger.store.put(datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f'),
+            #                          data=data_str)
             else:
-                KivyLogger.store.put(datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f'),
-                                     data=data_str)
-            Logger.info("save:" + str(KivyLogger.filename))
-        except:
+                # update only the dic. need store_sync
+                KivyLogger.store.store_put(datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f'), data_str)
+                if sync:
+                    KivyLogger.store.store_sync()
+            Logger.info("save:" +str(sync)+":"+str(KivyLogger.filename))
+        except Exception,e:
+            print str(e)
             Logger.info("save: did not work")
 
     # encryption
@@ -201,7 +211,8 @@ class KivyLogger:
     @staticmethod
     def connect():
         try:
-            KC.client = TwistedClient(the_ip=KL.log.ip)
+            if TwistedClient.ip is None:
+                KC.client = TwistedClient(the_ip=KL.log.ip)
             KC.client.connect_to_server(KC.client.ip)
         except:
             KivyLogger.base_mode.remove(DataMode.communication)
@@ -240,11 +251,11 @@ class WidgetLogger(Widget):
 
     def on_press(self, *args):
         super(WidgetLogger, self).on_press(*args)
-        KL.log.insert(action=LogAction.press, obj=self.name, comment='')
+        KL.log.insert(action=LogAction.press, obj=self.name, comment='', sync=False)
 
     def log_touch(self, action, touch):
         if KL.log is not None:
-            Logger.info("KivyLogger log_touch:" + str(touch.profile))
+            Logger.info("KivyLogger log_touch:" + str(touch.profile) + str(action))
             comment = {}
             if 'angle' in touch.profile:
                 comment['angle'] = touch.a
@@ -253,7 +264,7 @@ class WidgetLogger(Widget):
             if 'button' in touch.profile:
                 comment['button'] = touch.button
 
-            KL.log.insert(action=action, obj=self.name, comment=json.dumps(comment))
+            KL.log.insert(action=action, obj=self.name, comment=json.dumps(comment),sync=False)
 
     def on_play_wl(self, filename):
         KL.log.insert(action=LogAction.play, obj=self.name, comment=filename)
