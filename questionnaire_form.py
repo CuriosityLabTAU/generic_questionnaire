@@ -180,7 +180,7 @@ class QuestionsForm(BoxLayout):
         layoutup.add_widget(layout)
         layoutup.add_widget(BoxLayout())
         layoutbuttons = BoxLayout(size_hint_y=0.2)
-        self.next_button = Button(on_press=self.next,
+        self.next_button = LoggedButton(on_press=self.next,
                                   background_color=(0, 0.71, 1., 1),
                                   background_normal="",
                                   size_hint_x=0.3,
