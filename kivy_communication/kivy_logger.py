@@ -251,7 +251,7 @@ class WidgetLogger(Widget):
 
     def on_press(self, *args):
         super(WidgetLogger, self).on_press(*args)
-        KL.log.insert(action=LogAction.press, obj=self.name, comment='', sync=False)
+        KL.log.insert(action=LogAction.press, obj=self.name, comment='', sync=True)
 
     def log_touch(self, action, touch):
         if KL.log is not None:
@@ -264,7 +264,7 @@ class WidgetLogger(Widget):
             if 'button' in touch.profile:
                 comment['button'] = touch.button
 
-            KL.log.insert(action=action, obj=self.name, comment=json.dumps(comment),sync=False)
+            KL.log.insert(action=action, obj=self.name, comment=json.dumps(comment),sync=True)
 
     def on_play_wl(self, filename):
         KL.log.insert(action=LogAction.play, obj=self.name, comment=filename)
